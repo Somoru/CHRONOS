@@ -1,0 +1,64 @@
+{
+  "sample_responses": [
+    {
+      "fragment": "smh at the top 8 drama. ppl need to chill. g2g, ttyl.",
+      "response": {
+        "reconstructed_text": "Shaking my head at the drama around the 'Top 8' friends list on MySpace. People need to calm down. I have to go — talk to you later.",
+        "explanation": "'Top 8' refers to MySpace friends list in the mid-2000s; abbreviations are common messaging slang of that era.",
+        "missing_words": ["Shaking my head", "Top 8", "talk to you later"],
+        "keywords": ["MySpace top 8", "smh meaning", "g2g ttyl", "mid-2000s social media"],
+        "era_guess": {"label": "mid-2000s", "confidence": 0.92},
+        "confidence": 0.9
+      }
+    },
+    {
+      "fragment": "brb, connecting via dialup—phone's busy lol",
+      "response": {
+        "reconstructed_text": "Be right back, connecting to the internet via dial-up connection — the phone line is busy, laugh out loud",
+        "explanation": "Dial-up internet was common in the late 1990s and required a phone line, often causing conflicts with phone usage.",
+        "missing_words": ["Be right back", "dial-up connection", "laugh out loud"],
+        "keywords": ["dial-up internet", "1990s internet", "phone line busy", "early internet"],
+        "era_guess": {"label": "late-1990s", "confidence": 0.95},
+        "confidence": 0.85
+      }
+    },
+    {
+      "fragment": "that meme with lolcats cracked me up",
+      "response": {
+        "reconstructed_text": "That internet meme featuring cats with funny captions in broken English really made me laugh",
+        "explanation": "LOLcats were a popular internet meme format in the late 2000s, featuring cats with humorous captions written in 'lolspeak'.",
+        "missing_words": ["internet meme", "funny captions", "broken English"],
+        "keywords": ["lolcats", "internet memes", "late 2000s", "cat memes"],
+        "era_guess": {"label": "late-2000s", "confidence": 0.88},
+        "confidence": 0.82
+      }
+    }
+  ],
+  "sample_sources": [
+    {
+      "title": "The History of Internet Slang and Abbreviations",
+      "url": "https://example.com/internet-slang-history",
+      "snippet": "Comprehensive guide to understanding internet abbreviations and their evolution through different eras of online communication."
+    },
+    {
+      "title": "MySpace and Early Social Media Culture",
+      "url": "https://example.com/myspace-culture", 
+      "snippet": "An in-depth look at MySpace's impact on social media, including the famous 'Top 8' friends feature that defined early 2000s social networking."
+    },
+    {
+      "title": "Dial-up Internet: The Early Days of Online Connection",
+      "url": "https://example.com/dialup-internet",
+      "snippet": "Exploring the era of dial-up internet connections, phone line conflicts, and the unique challenges of early internet access."
+    },
+    {
+      "title": "Evolution of Digital Communication",
+      "url": "https://example.com/digital-communication",
+      "snippet": "How online communication has evolved from simple text to complex digital interactions, including the rise and fall of various platforms."
+    },
+    {
+      "title": "Linguistics of Internet Culture",
+      "url": "https://example.com/internet-linguistics",
+      "snippet": "Academic analysis of how internet culture has influenced language evolution and the development of digital native communication patterns."
+    }
+  ]
+}
