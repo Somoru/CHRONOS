@@ -1,6 +1,25 @@
 'use client';
 
 import { useState } from 'react';
+import {
+  Paper,
+  Typography,
+  TextField,
+  Button,
+  FormControlLabel,
+  Switch,
+  Stack,
+  Box,
+  Divider,
+  Chip,
+  Tooltip,
+  alpha,
+} from '@mui/material';
+import {
+  Send as SendIcon,
+  AutoAwesome as AutoAwesomeIcon,
+  Settings as SettingsIcon,
+} from '@mui/icons-material';
 
 interface InputPanelProps {
   onSubmit: (fragment: string, options: any) => void;
@@ -14,128 +33,177 @@ export default function InputPanel({ onSubmit, isLoading }: InputPanelProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (fragment.trim() && !isLoading) {
-      onSubmit(fragment.trim(), {
+    if (fragment.trim()) {
+      onSubmit(fragment, {
         era_detection: eraDetection,
-        max_sources: maxSources
+        max_sources: maxSources,
       });
     }
   };
 
-  const loadExample = (example: string) => {
-    setFragment(example);
-  };
+  const examples = [
+    { text: 'The quick brown fox jumps over the lazy...', label: 'Classic' },
+    { text: 'To be or not to be, that is the...', label: 'Shakespeare' },
+    { text: 'In a hole in the ground there lived a...', label: 'Tolkien' },
+    { text: 'It was the best of times, it was the...', label: 'Dickens' }
+  ];
 
   return (
-    <div className="glass-panel p-6">
-      <h2 className="text-2xl font-bold text-cyan-300 mb-6 text-center">
-        Fragment Input
-      </h2>
-      
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Text Input */}
-        <div>
-          <label htmlFor="fragment" className="block text-sm font-medium text-gray-300 mb-2">
-            Historical Text Fragment
-          </label>
-          <textarea
-            id="fragment"
+    <Paper
+      elevation={3}
+      sx={{
+        p: 3,
+        height: '100%',
+        background: (theme) =>
+          theme.palette.mode === 'light'
+            ? 'linear-gradient(145deg, #ffffff 0%, #f5f7fa 100%)'
+            : 'linear-gradient(145deg, #1e1e1e 0%, #2d2d2d 100%)',
+        border: (theme) => `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+      }}
+    >
+      <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }}>
+        <AutoAwesomeIcon color="primary" />
+        <Typography variant="h5" fontWeight={600}>
+          Input Fragment
+        </Typography>
+      </Stack>
+      <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+        Enter incomplete text for AI-powered reconstruction
+      </Typography>
+
+      <form onSubmit={handleSubmit}>
+        <Stack spacing={3}>
+          <TextField
+            multiline
+            rows={7}
+            fullWidth
+            variant="outlined"
+            placeholder="Enter your incomplete text fragment here... 
+            
+Example: 'The quick brown fox jumps over the...'"
             value={fragment}
             onChange={(e) => setFragment(e.target.value)}
-            placeholder="Enter a fragmented piece of internet history..."
-            className="w-full h-32 px-4 py-3 bg-gray-800 bg-opacity-50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent resize-none"
             disabled={isLoading}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                '&:hover fieldset': {
+                  borderColor: 'primary.main',
+                },
+              },
+            }}
           />
-          <div className="text-xs text-gray-400 mt-1">
-            {fragment.length}/2000 characters
-          </div>
-        </div>
 
-        {/* Options */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-magenta-300">Options</h3>
-          
-          {/* Era Detection Toggle */}
-          <div className="flex items-center justify-between">
-            <label htmlFor="era-detection" className="text-sm text-gray-300">
-              Era Detection
-            </label>
-            <button
-              type="button"
-              onClick={() => setEraDetection(!eraDetection)}
-              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                eraDetection ? 'bg-cyan-500' : 'bg-gray-600'
-              }`}
-              disabled={isLoading}
-            >
-              <span
-                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                  eraDetection ? 'translate-x-6' : 'translate-x-1'
-                }`}
-              />
-            </button>
-          </div>
+          <Box>
+            <Typography variant="subtitle2" gutterBottom fontWeight={600}>
+              💡 Quick Examples
+            </Typography>
+            <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+              {examples.map((example, idx) => (
+                <Tooltip key={idx} title={example.label} arrow>
+                  <Chip
+                    label={example.text}
+                    onClick={() => setFragment(example.text)}
+                    sx={{
+                      mb: 1,
+                      '&:hover': {
+                        transform: 'translateY(-2px)',
+                        boxShadow: 2,
+                      },
+                      transition: 'all 0.2s',
+                    }}
+                    disabled={isLoading}
+                    color="primary"
+                    variant="outlined"
+                  />
+                </Tooltip>
+              ))}
+            </Stack>
+          </Box>
 
-          {/* Max Sources Slider */}
-          <div>
-            <label htmlFor="max-sources" className="block text-sm text-gray-300 mb-2">
-              Max Sources: {maxSources}
-            </label>
-            <input
-              type="range"
-              id="max-sources"
-              min="1"
-              max="10"
-              value={maxSources}
-              onChange={(e) => setMaxSources(parseInt(e.target.value))}
-              className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer slider"
-              disabled={isLoading}
+          <Divider>
+            <Chip
+              icon={<SettingsIcon />}
+              label="Options"
+              size="small"
+              color="primary"
+              variant="outlined"
             />
-          </div>
-        </div>
+          </Divider>
 
-        {/* Example Buttons */}
-        <div className="space-y-3">
-          <h3 className="text-lg font-semibold text-magenta-300">Quick Examples</h3>
-          <div className="grid gap-2">
-            <button
-              type="button"
-              onClick={() => loadExample("smh at the top 8 drama. ppl need to chill. g2g, ttyl.")}
-              className="text-left p-3 bg-gray-800 bg-opacity-30 rounded-lg hover:bg-opacity-50 transition-colors text-sm text-gray-300"
-              disabled={isLoading}
-            >
-              <span className="text-cyan-400">MySpace Era:</span> "smh at the top 8 drama..."
-            </button>
-            <button
-              type="button"
-              onClick={() => loadExample("brb, connecting via dialup—phone's busy lol")}
-              className="text-left p-3 bg-gray-800 bg-opacity-30 rounded-lg hover:bg-opacity-50 transition-colors text-sm text-gray-300"
-              disabled={isLoading}
-            >
-              <span className="text-cyan-400">Dial-up Era:</span> "brb, connecting via dialup..."
-            </button>
-            <button
-              type="button"
-              onClick={() => loadExample("that meme with lolcats cracked me up")}
-              className="text-left p-3 bg-gray-800 bg-opacity-30 rounded-lg hover:bg-opacity-50 transition-colors text-sm text-gray-300"
-              disabled={isLoading}
-            >
-              <span className="text-cyan-400">Meme Era:</span> "that meme with lolcats..."
-            </button>
-          </div>
-        </div>
+          <Box>
+            <Stack spacing={2.5}>
+              <Tooltip title="Enable AI-powered time period detection" arrow placement="right">
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={eraDetection}
+                      onChange={(e) => setEraDetection(e.target.checked)}
+                      disabled={isLoading}
+                      color="primary"
+                    />
+                  }
+                  label={
+                    <Typography variant="body2" fontWeight={500}>
+                      ⏰ Era Detection
+                    </Typography>
+                  }
+                />
+              </Tooltip>
+              
+              <Box>
+                <Typography variant="body2" gutterBottom fontWeight={500}>
+                  📚 Max Sources: <strong>{maxSources}</strong>
+                </Typography>
+                <Stack direction="row" spacing={1}>
+                  {[3, 5, 10].map((num) => (
+                    <Button
+                      key={num}
+                      size="small"
+                      variant={maxSources === num ? 'contained' : 'outlined'}
+                      onClick={() => setMaxSources(num)}
+                      disabled={isLoading}
+                      sx={{
+                        minWidth: 60,
+                        fontWeight: 600,
+                      }}
+                    >
+                      {num}
+                    </Button>
+                  ))}
+                </Stack>
+              </Box>
+            </Stack>
+          </Box>
 
-        {/* Submit Button */}
-        <button
-          type="submit"
-          disabled={!fragment.trim() || isLoading}
-          className={`glow-button w-full py-4 text-lg font-bold ${
-            isLoading ? 'loading-dots' : ''
-          }`}
-        >
-          {isLoading ? 'Reconstructing' : 'Begin Reconstruction'}
-        </button>
+          <Button
+            type="submit"
+            variant="contained"
+            size="large"
+            fullWidth
+            disabled={isLoading || !fragment.trim()}
+            endIcon={<SendIcon />}
+            sx={{
+              py: 1.5,
+              fontSize: '1.1rem',
+              fontWeight: 600,
+              boxShadow: 3,
+              '&:hover': {
+                boxShadow: 6,
+                transform: 'translateY(-2px)',
+              },
+              transition: 'all 0.3s',
+            }}
+          >
+            {isLoading ? 'Processing...' : 'Reconstruct Text'}
+          </Button>
+
+          {fragment.trim() && (
+            <Typography variant="caption" color="text.secondary" textAlign="center">
+              {fragment.trim().split(' ').length} words • Ready to process
+            </Typography>
+          )}
+        </Stack>
       </form>
-    </div>
+    </Paper>
   );
 }

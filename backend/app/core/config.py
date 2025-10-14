@@ -32,6 +32,7 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
         case_sensitive = False
+        extra = "ignore"  # Allow extra fields from .env to be ignored
         
     def __post_init__(self):
         # Auto-enable demo mode if API keys are missing

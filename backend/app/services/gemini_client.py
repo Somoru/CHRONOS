@@ -64,7 +64,8 @@ Now reconstruct the following fragment. Fragment: "{fragment}"
 
     async def _call_gemini(self, prompt: str) -> str:
         """Make async HTTP call to Gemini API"""
-        url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent"
+        model_name = self.settings.gemini_model
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent"
         
         headers = {
             "Content-Type": "application/json",
@@ -78,7 +79,8 @@ Now reconstruct the following fragment. Fragment: "{fragment}"
                 "temperature": 0.3,
                 "topK": 40,
                 "topP": 0.95,
-                "maxOutputTokens": 1024,
+                "maxOutputTokens": 2048,
+                "responseMimeType": "application/json"
             }
         }
         
@@ -94,15 +96,37 @@ Now reconstruct the following fragment. Fragment: "{fragment}"
         result = response.json()
         if not result.get("candidates"):
             raise Exception("No response from Gemini")
-            
-        text = result["candidates"][0]["content"]["parts"][0]["text"]
+        
+        # Handle different response structures from Gemini API
+        candidate = result["candidates"][0]
+        content = candidate.get("content", {})
+        
+        if isinstance(content, dict) and "parts" in content:
+            parts = content["parts"]
+            if parts and isinstance(parts, list) and "text" in parts[0]:
+                text = parts[0]["text"]
+            else:
+                raise Exception(f"No text in parts: {parts}")
+        else:
+            raise Exception(f"Unexpected content structure: {content}")
+        
         return text
     
     def _parse_json_response(self, response: str) -> Dict[str, Any]:
         """Extract and parse JSON from Gemini response"""
         try:
-            # Try to parse the entire response as JSON first
-            return json.loads(response.strip())
+            # Remove markdown code blocks if present
+            cleaned = response.strip()
+            if cleaned.startswith("```json"):
+                cleaned = cleaned[7:]  # Remove ```json
+            if cleaned.startswith("```"):
+                cleaned = cleaned[3:]  # Remove ```
+            if cleaned.endswith("```"):
+                cleaned = cleaned[:-3]  # Remove trailing ```
+            cleaned = cleaned.strip()
+            
+            # Try to parse the cleaned response as JSON
+            return json.loads(cleaned)
         except json.JSONDecodeError:
             # Look for JSON block within the response
             json_match = re.search(r'\{.*\}', response, re.DOTALL)

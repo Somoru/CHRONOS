@@ -1,151 +1,207 @@
 'use client';
 
 import { useState } from 'react';
+import {
+  Container,
+  Box,
+  Typography,
+  Stack,
+  IconButton,
+  Fade,
+  Alert,
+  Snackbar,
+} from '@mui/material';
+import {
+  Brightness4,
+  Brightness7,
+  Science,
+} from '@mui/icons-material';
 import InputPanel from '@/components/InputPanel';
 import ReportCard from '@/components/ReportCard';
 import ProcessLog from '@/components/ProcessLog';
 import { ReconstructionReport } from '@/types/api';
+import { useThemeMode } from './ThemeProvider';
 
 export default function Home() {
   const [report, setReport] = useState<ReconstructionReport | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [processLog, setProcessLog] = useState<string[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const { mode, toggleTheme } = useThemeMode();
 
   const handleReconstruct = async (fragment: string, options: any) => {
     setIsLoading(true);
     setReport(null);
     setProcessLog([]);
+    setError(null);
+
+    const logStream: string[] = [];
+    const log = (message: string) => {
+      logStream.push(message);
+      setProcessLog([...logStream]);
+    };
 
     try {
-      // Simulate processing steps
-      setProcessLog(['🔍 Analyzing fragment...']);
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      log('🚀 Initializing Chronos AI...');
+      await new Promise(resolve => setTimeout(resolve, 500));
       
-      setProcessLog(prev => [...prev, '🤖 Calling Gemini AI...']);
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      setProcessLog(prev => [...prev, '🌐 Searching for sources...']);
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      setProcessLog(prev => [...prev, '⏰ Detecting era...']);
+      log('🔍 Analyzing text fragment...');
       await new Promise(resolve => setTimeout(resolve, 800));
+      
+      log('🤖 Connecting to Gemini AI...');
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      log('📚 Searching historical archives...');
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      if (options.era_detection) {
+        log('⏰ Detecting time period...');
+        await new Promise(resolve => setTimeout(resolve, 600));
+      }
 
-      // Call backend API
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/reconstruct`, {
+      log('📡 Sending request to backend...');
+      
+      const response = await fetch('http://localhost:8000/api/reconstruct', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          fragment,
-          options
-        })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fragment, options }),
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorData = await response.json().catch(() => ({ detail: response.statusText }));
+        throw new Error(errorData.detail || `API Error: ${response.statusText}`);
       }
 
       const result: ReconstructionReport = await response.json();
       setReport(result);
-      setProcessLog(prev => [...prev, '✅ Reconstruction complete!']);
-
-    } catch (error) {
+      log('✅ Reconstruction complete!');
+    } catch (error: any) {
       console.error('Error:', error);
-      setProcessLog(prev => [...prev, '❌ Error occurred during reconstruction']);
+      const errorMsg = error.message || 'Unknown error occurred';
+      log(`❌ Error: ${errorMsg}`);
+      setError(errorMsg);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900">
-      {/* Matrix Background Effect */}
-      <div className="matrix-bg">
-        <div className="absolute inset-0 opacity-10">
-          {Array.from({ length: 50 }).map((_, i) => (
-            <div
-              key={i}
-              className="absolute animate-pulse"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 3}s`,
-              }}
-            >
-              ·
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="relative z-10">
+    <Box
+      sx={{
+        minHeight: '100vh',
+        background: mode === 'light'
+          ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+          : 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
+        py: 4,
+      }}
+    >
+      <Container maxWidth="xl">
         {/* Header */}
-        <header className="text-center pt-16 pb-8">
-          <h1 className="cyberpunk-title text-6xl md:text-8xl font-bold mb-4">
-            PROJECT CHRONOS
-          </h1>
-          <p className="text-xl md:text-2xl text-cyan-300 mb-2">
-            The AI Archeologist
-          </p>
-          <p className="text-lg text-gray-300 max-w-2xl mx-auto px-4">
-            Reconstruct fragmented digital history using advanced AI archaeology
-          </p>
-        </header>
+        <Fade in timeout={800}>
+          <Box sx={{ textAlign: 'center', mb: 6 }}>
+            <Stack direction="row" justifyContent="center" alignItems="center" spacing={2} sx={{ mb: 2 }}>
+              <Science sx={{ fontSize: 48, color: 'primary.light' }} />
+              <Typography
+                variant="h2"
+                component="h1"
+                fontWeight={700}
+                sx={{
+                  background: mode === 'light'
+                    ? 'linear-gradient(45deg, #667eea 30%, #764ba2 90%)'
+                    : 'linear-gradient(45deg, #90caf9 30%, #ce93d8 90%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                }}
+              >
+                Project Chronos
+              </Typography>
+            </Stack>
+            <Typography variant="h6" color="text.secondary" sx={{ mb: 2 }}>
+              AI-Powered Text Fragment Reconstruction
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 600, mx: 'auto' }}>
+              Leverage advanced AI and semantic search to reconstruct incomplete text fragments
+              with contextual understanding and historical accuracy.
+            </Typography>
+            
+            {/* Theme Toggle */}
+            <Box sx={{ position: 'absolute', top: 24, right: 24 }}>
+              <IconButton
+                onClick={toggleTheme}
+                color="primary"
+                sx={{
+                  bgcolor: 'background.paper',
+                  boxShadow: 2,
+                  '&:hover': { boxShadow: 4 },
+                }}
+              >
+                {mode === 'dark' ? <Brightness7 /> : <Brightness4 />}
+              </IconButton>
+            </Box>
+          </Box>
+        </Fade>
 
         {/* Main Content */}
-        <main className="container mx-auto px-4 max-w-6xl">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Input Panel */}
-            <div className="lg:col-span-1">
+        <Stack direction={{ xs: 'column', md: 'row' }} spacing={4}>
+          <Fade in timeout={1000}>
+            <Box sx={{ flex: { xs: 1, md: '0 0 400px' } }}>
               <InputPanel onSubmit={handleReconstruct} isLoading={isLoading} />
-            </div>
+            </Box>
+          </Fade>
 
-            {/* Results Area */}
-            <div className="lg:col-span-2 space-y-6">
-              {/* Process Log */}
-              {(isLoading || processLog.length > 0) && (
-                <ProcessLog logs={processLog} isLoading={isLoading} />
-              )}
-
-              {/* Reconstruction Report */}
-              {report && <ReportCard report={report} />}
-
-              {/* Demo Instructions */}
-              {!report && !isLoading && (
-                <div className="glass-panel p-8 text-center">
-                  <h3 className="text-2xl font-bold text-cyan-300 mb-4">
-                    Begin Your Archaeological Journey
-                  </h3>
-                  <p className="text-gray-300 mb-6">
-                    Enter a fragmented piece of internet history and watch as Chronos reconstructs its original form,
-                    discovers its era, and finds contextual sources.
-                  </p>
-                  <div className="grid md:grid-cols-2 gap-4 text-left">
-                    <div className="bg-gray-800 bg-opacity-50 p-4 rounded-lg">
-                      <h4 className="text-cyan-400 font-bold mb-2">Example 1:</h4>
-                      <code className="text-sm text-gray-300">
-                        "smh at the top 8 drama. ppl need to chill. g2g, ttyl."
-                      </code>
-                    </div>
-                    <div className="bg-gray-800 bg-opacity-50 p-4 rounded-lg">
-                      <h4 className="text-cyan-400 font-bold mb-2">Example 2:</h4>
-                      <code className="text-sm text-gray-300">
-                        "brb, connecting via dialup—phone's busy lol"
-                      </code>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </main>
+          <Fade in timeout={1200}>
+            <Box sx={{ flex: 1 }}>
+              <Stack spacing={3}>
+                {(isLoading || processLog.length > 0) && (
+                  <ProcessLog logs={processLog} isLoading={isLoading} />
+                )}
+                {report && <ReportCard report={report} />}
+                
+                {!isLoading && !report && processLog.length === 0 && (
+                  <Box
+                    sx={{
+                      textAlign: 'center',
+                      py: 8,
+                      bgcolor: 'background.paper',
+                      borderRadius: 3,
+                      boxShadow: 2,
+                    }}
+                  >
+                    <Science sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }} />
+                    <Typography variant="h6" color="text.secondary" gutterBottom>
+                      Ready to Reconstruct
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Enter a text fragment to begin AI-powered reconstruction
+                    </Typography>
+                  </Box>
+                )}
+              </Stack>
+            </Box>
+          </Fade>
+        </Stack>
 
         {/* Footer */}
-        <footer className="text-center py-8 mt-16 text-gray-400">
-          <p>Project Chronos v1.0 - Powered by Gemini AI & Vector Search</p>
-        </footer>
-      </div>
-    </div>
+        <Fade in timeout={1400}>
+          <Box sx={{ textAlign: 'center', mt: 6 }}>
+            <Typography variant="body2" color="text.secondary">
+              Project Chronos v1.1 • Powered by Gemini AI & pgvector
+            </Typography>
+          </Box>
+        </Fade>
+      </Container>
+
+      {/* Error Snackbar */}
+      <Snackbar
+        open={!!error}
+        autoHideDuration={6000}
+        onClose={() => setError(null)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert severity="error" onClose={() => setError(null)} sx={{ width: '100%' }}>
+          {error}
+        </Alert>
+      </Snackbar>
+    </Box>
   );
 }

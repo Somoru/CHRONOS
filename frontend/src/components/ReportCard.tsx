@@ -1,6 +1,27 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import {
+  Paper,
+  Typography,
+  Box,
+  Stack,
+  Chip,
+  LinearProgress,
+  Divider,
+  Link,
+  alpha,
+  Fade,
+  Card,
+  CardContent,
+} from '@mui/material';
+import {
+  CheckCircle as CheckCircleIcon,
+  Schedule as ScheduleIcon,
+  Language as LanguageIcon,
+  Label as LabelIcon,
+  Description as DescriptionIcon,
+  TrendingUp as TrendingUpIcon,
+} from '@mui/icons-material';
 import { ReconstructionReport } from '@/types/api';
 
 interface ReportCardProps {
@@ -8,251 +29,292 @@ interface ReportCardProps {
 }
 
 export default function ReportCard({ report }: ReportCardProps) {
-  const [isRevealed, setIsRevealed] = useState(false);
-  const [showingText, setShowingText] = useState('');
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  // Typewriter effect for reconstructed text
-  useEffect(() => {
-    setIsRevealed(true);
-    const text = report.reconstructed_text;
-    let index = 0;
-    
-    const typewriter = setInterval(() => {
-      if (index <= text.length) {
-        setShowingText(text.slice(0, index));
-        setCurrentIndex(index);
-        index++;
-      } else {
-        clearInterval(typewriter);
-      }
-    }, 50);
-
-    return () => clearInterval(typewriter);
-  }, [report.reconstructed_text]);
-
-  const downloadPDF = async () => {
-    try {
-      // Simple PDF generation using browser print
-      const printWindow = window.open('', '_blank');
-      if (printWindow) {
-        printWindow.document.write(`
-          <html>
-            <head>
-              <title>Chronos Report - ${report.id}</title>
-              <style>
-                body { font-family: monospace; padding: 20px; line-height: 1.6; }
-                .header { border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px; }
-                .section { margin-bottom: 20px; }
-                .sources { background: #f5f5f5; padding: 10px; margin: 10px 0; }
-              </style>
-            </head>
-            <body>
-              <div class="header">
-                <h1>PROJECT CHRONOS - Archaeological Report</h1>
-                <p>Report ID: ${report.id}</p>
-                <p>Generated: ${new Date(report.created_at).toLocaleString()}</p>
-              </div>
-              
-              <div class="section">
-                <h2>Original Fragment</h2>
-                <p>"${report.original_fragment}"</p>
-              </div>
-              
-              <div class="section">
-                <h2>Reconstructed Text</h2>
-                <p>"${report.reconstructed_text}"</p>
-              </div>
-              
-              <div class="section">
-                <h2>Archaeological Analysis</h2>
-                <p>${report.explanation}</p>
-              </div>
-              
-              ${report.era_guess ? `
-              <div class="section">
-                <h2>Era Detection</h2>
-                <p>Era: ${report.era_guess.label} (${Math.round(report.era_guess.confidence * 100)}% confidence)</p>
-              </div>
-              ` : ''}
-              
-              <div class="section">
-                <h2>Contextual Sources</h2>
-                ${report.contextual_sources.map(source => `
-                  <div class="sources">
-                    <strong>${source.title}</strong><br>
-                    <em>${source.url}</em><br>
-                    ${source.snippet}
-                  </div>
-                `).join('')}
-              </div>
-              
-              <div class="section">
-                <h2>Keywords</h2>
-                <p>${report.keywords.join(', ')}</p>
-              </div>
-            </body>
-          </html>
-        `);
-        printWindow.document.close();
-        printWindow.print();
-      }
-    } catch (error) {
-      console.error('PDF generation failed:', error);
-      alert('PDF generation failed. Please try again.');
-    }
-  };
-
   return (
-    <div className={`glass-panel p-8 transition-all duration-1000 ${isRevealed ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
-      <div className="flex justify-between items-start mb-6">
-        <h2 className="text-2xl font-bold text-cyan-300">
-          🏺 Archaeological Report
-        </h2>
-        <button
-          onClick={downloadPDF}
-          className="glow-button px-4 py-2 text-sm"
-        >
-          📄 Export PDF
-        </button>
-      </div>
+    <Fade in timeout={600}>
+      <Paper
+        elevation={3}
+        sx={{
+          p: 4,
+          background: (theme) =>
+            theme.palette.mode === 'light'
+              ? 'linear-gradient(145deg, #ffffff 0%, #f5f7fa 100%)'
+              : 'linear-gradient(145deg, #1e1e1e 0%, #2d2d2d 100%)',
+          border: (theme) => `1px solid ${alpha(theme.palette.success.main, 0.2)}`,
+        }}
+      >
+        <Stack direction="row" alignItems="center" spacing={2} sx={{ mb: 3 }}>
+          <CheckCircleIcon color="success" sx={{ fontSize: 36 }} />
+          <Box>
+            <Typography variant="h4" fontWeight={700}>
+              Reconstruction Complete
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              AI analysis finished successfully
+            </Typography>
+          </Box>
+        </Stack>
 
-      {/* Original Fragment */}
-      <div className="mb-6">
-        <h3 className="text-lg font-semibold text-magenta-300 mb-2">Original Fragment</h3>
-        <div className="bg-red-900 bg-opacity-20 border border-red-500 rounded-lg p-4">
-          <code className="text-gray-300 text-sm">"{report.original_fragment}"</code>
-        </div>
-      </div>
-
-      {/* Reconstructed Text */}
-      <div className="mb-6">
-        <h3 className="text-lg font-semibold text-magenta-300 mb-2">Reconstructed Text</h3>
-        <div className="bg-green-900 bg-opacity-20 border border-green-500 rounded-lg p-4">
-          <code className="text-gray-100 text-sm">
-            "{showingText}"
-            {currentIndex < report.reconstructed_text.length && (
-              <span className="animate-pulse">|</span>
-            )}
-          </code>
-        </div>
-      </div>
-
-      {/* Confidence Meter */}
-      <div className="mb-6">
-        <div className="flex justify-between items-center mb-2">
-          <h3 className="text-lg font-semibold text-magenta-300">Reconstruction Confidence</h3>
-          <span className="text-cyan-300 font-bold">
-            {Math.round(report.reconstruction_confidence * 100)}%
-          </span>
-        </div>
-        <div className="confidence-meter">
-          <div 
-            className="confidence-fill"
-            style={{ width: `${report.reconstruction_confidence * 100}%` }}
-          ></div>
-        </div>
-      </div>
-
-      {/* Era Detection */}
-      {report.era_guess && (
-        <div className="mb-6">
-          <h3 className="text-lg font-semibold text-magenta-300 mb-2">Era Detection</h3>
-          <div className="flex items-center space-x-4">
-            <span className={`flicker px-4 py-2 rounded-lg border-2 border-magenta-500 bg-magenta-900 bg-opacity-30`}>
-              <strong className="text-magenta-200">{report.era_guess.label}</strong>
-            </span>
-            <div className="flex-1">
-              <div className="text-sm text-gray-300 mb-1">
-                Era Confidence: {Math.round(report.era_guess.confidence * 100)}%
-              </div>
-              <div className="confidence-meter">
-                <div 
-                  className="confidence-fill"
-                  style={{ width: `${report.era_guess.confidence * 100}%` }}
-                ></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Explanation */}
-      <div className="mb-6">
-        <h3 className="text-lg font-semibold text-magenta-300 mb-2">Archaeological Analysis</h3>
-        <p className="text-gray-300 leading-relaxed">{report.explanation}</p>
-      </div>
-
-      {/* Keywords */}
-      <div className="mb-6">
-        <h3 className="text-lg font-semibold text-magenta-300 mb-2">Keywords</h3>
-        <div className="flex flex-wrap gap-2">
-          {report.keywords.map((keyword, index) => (
-            <span 
-              key={index}
-              className="px-3 py-1 bg-cyan-900 bg-opacity-30 border border-cyan-500 rounded-full text-cyan-300 text-sm"
+        <Stack spacing={4} sx={{ mt: 3 }}>
+          {/* Original Fragment */}
+          <Box>
+            <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1.5 }}>
+              <DescriptionIcon color="primary" fontSize="small" />
+              <Typography variant="h6" fontWeight={600} color="primary">
+                Original Fragment
+              </Typography>
+            </Stack>
+            <Paper
+              variant="outlined"
+              sx={{
+                p: 2.5,
+                bgcolor: (theme) => alpha(theme.palette.primary.main, 0.05),
+                borderColor: (theme) => alpha(theme.palette.primary.main, 0.2),
+                borderLeft: (theme) => `4px solid ${theme.palette.primary.main}`,
+              }}
             >
-              {keyword}
-            </span>
-          ))}
-        </div>
-      </div>
+              <Typography variant="body1" sx={{ fontStyle: 'italic', lineHeight: 1.7 }}>
+                "{report.original_fragment}"
+              </Typography>
+            </Paper>
+          </Box>
 
-      {/* Contextual Sources */}
-      <div className="mb-6">
-        <h3 className="text-lg font-semibold text-magenta-300 mb-4">Contextual Sources</h3>
-        <div className="space-y-4">
-          {report.contextual_sources.map((source, index) => (
-            <div 
-              key={index}
-              className="glass-panel p-4 hover:bg-opacity-20 transition-all duration-300"
+          {/* Reconstructed Text */}
+          <Box>
+            <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1.5 }}>
+              <CheckCircleIcon color="success" fontSize="small" />
+              <Typography variant="h6" fontWeight={600} color="success.main">
+                Reconstructed Text
+              </Typography>
+            </Stack>
+            <Paper
+              variant="outlined"
+              sx={{
+                p: 2.5,
+                bgcolor: (theme) => alpha(theme.palette.success.main, 0.05),
+                borderColor: (theme) => alpha(theme.palette.success.main, 0.2),
+                borderLeft: (theme) => `4px solid ${theme.palette.success.main}`,
+              }}
             >
-              <h4 className="font-semibold text-cyan-300 mb-2">
-                <a 
-                  href={source.url} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="hover:underline"
-                >
-                  {source.title}
-                </a>
-              </h4>
-              <p className="text-gray-300 text-sm mb-2">{source.snippet}</p>
-              <a 
-                href={source.url} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-cyan-400 text-xs hover:underline"
-              >
-                {source.url}
-              </a>
-            </div>
-          ))}
-        </div>
-      </div>
+              <Typography variant="body1" sx={{ fontWeight: 500, lineHeight: 1.7 }}>
+                {report.reconstructed_text}
+              </Typography>
+            </Paper>
+          </Box>
 
-      {/* Metadata */}
-      <div className="text-xs text-gray-400 border-t border-gray-600 pt-4">
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <strong>Report ID:</strong> {report.id}
-          </div>
-          <div>
-            <strong>Generated:</strong> {new Date(report.created_at).toLocaleString()}
-          </div>
-          <div>
-            <strong>Model:</strong> {report.model_meta.model}
-          </div>
-          <div>
-            <strong>Tokens Used:</strong> {report.model_meta.tokens_used || 'N/A'}
-          </div>
-        </div>
-        {report.model_meta.demo_mode && (
-          <div className="mt-2 text-orange-400">
-            ⚠️ Demo Mode - Add API keys for full functionality
-          </div>
-        )}
-      </div>
-    </div>
+          <Divider />
+
+          {/* Confidence Score */}
+          <Box>
+            <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
+              <Stack direction="row" alignItems="center" spacing={1}>
+                <TrendingUpIcon color="primary" />
+                <Typography variant="h6" fontWeight={600}>
+                  Confidence Score
+                </Typography>
+              </Stack>
+              <Typography variant="h4" fontWeight={700} color="primary">
+                {Math.round(report.reconstruction_confidence * 100)}%
+              </Typography>
+            </Stack>
+            <LinearProgress
+              variant="determinate"
+              value={report.reconstruction_confidence * 100}
+              sx={{
+                height: 12,
+                borderRadius: 2,
+                bgcolor: (theme) => alpha(theme.palette.primary.main, 0.1),
+                '& .MuiLinearProgress-bar': {
+                  borderRadius: 2,
+                  background: (theme) =>
+                    `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                },
+              }}
+            />
+          </Box>
+
+          {/* Era Detection */}
+          {report.era_guess && (
+            <Card
+              variant="outlined"
+              sx={{
+                bgcolor: (theme) => alpha(theme.palette.secondary.main, 0.05),
+                borderColor: (theme) => alpha(theme.palette.secondary.main, 0.2),
+              }}
+            >
+              <CardContent>
+                <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1.5 }}>
+                  <ScheduleIcon color="secondary" />
+                  <Typography variant="h6" fontWeight={600}>
+                    Detected Era
+                  </Typography>
+                </Stack>
+                <Chip
+                  label={`${report.era_guess.label} (${Math.round(report.era_guess.confidence * 100)}% confidence)`}
+                  color="secondary"
+                  sx={{ fontWeight: 600, fontSize: '1rem', py: 2.5, px: 1 }}
+                />
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Explanation */}
+          {report.explanation && (
+            <Box>
+              <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1.5 }}>
+                <DescriptionIcon color="info" fontSize="small" />
+                <Typography variant="h6" fontWeight={600}>
+                  AI Analysis
+                </Typography>
+              </Stack>
+              <Typography variant="body1" color="text.secondary" sx={{ lineHeight: 1.8 }}>
+                {report.explanation}
+              </Typography>
+            </Box>
+          )}
+
+          {/* Keywords */}
+          {report.keywords && report.keywords.length > 0 && (
+            <Box>
+              <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1.5 }}>
+                <LabelIcon color="primary" fontSize="small" />
+                <Typography variant="h6" fontWeight={600}>
+                  Keywords ({report.keywords.length})
+                </Typography>
+              </Stack>
+              <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+                {report.keywords.map((keyword, idx) => (
+                  <Chip
+                    key={idx}
+                    label={keyword}
+                    color="primary"
+                    variant="outlined"
+                    sx={{ fontWeight: 500 }}
+                  />
+                ))}
+              </Stack>
+            </Box>
+          )}
+
+          {/* Missing Words */}
+          {report.missing_words && report.missing_words.length > 0 && (
+            <Box>
+              <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1.5 }}>
+                <Typography variant="h6" fontWeight={600}>
+                  Missing Words ({report.missing_words.length})
+                </Typography>
+              </Stack>
+              <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+                {report.missing_words.map((word, idx) => (
+                  <Chip
+                    key={idx}
+                    label={word}
+                    size="medium"
+                    variant="filled"
+                    color="warning"
+                    sx={{ fontWeight: 500 }}
+                  />
+                ))}
+              </Stack>
+            </Box>
+          )}
+
+          {/* Sources */}
+          {report.contextual_sources && report.contextual_sources.length > 0 && (
+            <Box>
+              <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }}>
+                <LanguageIcon color="info" />
+                <Typography variant="h6" fontWeight={600}>
+                  Contextual Sources ({report.contextual_sources.length})
+                </Typography>
+              </Stack>
+              <Stack spacing={2}>
+                {report.contextual_sources.map((source, idx) => (
+                  <Card
+                    key={idx}
+                    variant="outlined"
+                    sx={{
+                      '&:hover': {
+                        boxShadow: 3,
+                        transform: 'translateY(-2px)',
+                      },
+                      transition: 'all 0.3s',
+                    }}
+                  >
+                    <CardContent>
+                      <Typography variant="body1" fontWeight={600} gutterBottom>
+                        {source.title}
+                      </Typography>
+                      <Link
+                        href={source.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        sx={{
+                          fontSize: '0.875rem',
+                          display: 'block',
+                          mb: 1,
+                          wordBreak: 'break-all',
+                        }}
+                      >
+                        🔗 {source.url}
+                      </Link>
+                      {source.snippet && (
+                        <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
+                          "{source.snippet}"
+                        </Typography>
+                      )}
+                    </CardContent>
+                  </Card>
+                ))}
+              </Stack>
+            </Box>
+          )}
+
+          {/* Metadata */}
+          <Divider />
+          <Box
+            sx={{
+              bgcolor: (theme) => alpha(theme.palette.info.main, 0.05),
+              p: 2,
+              borderRadius: 2,
+            }}
+          >
+            <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+              Processing Metadata
+            </Typography>
+            <Stack direction="row" spacing={4} flexWrap="wrap">
+              <Box>
+                <Typography variant="caption" color="text.secondary">
+                  Model
+                </Typography>
+                <Typography variant="body2" fontWeight={600}>
+                  {report.model_meta.model}
+                </Typography>
+              </Box>
+              {report.model_meta.tokens_used && (
+                <Box>
+                  <Typography variant="caption" color="text.secondary">
+                    Tokens Used
+                  </Typography>
+                  <Typography variant="body2" fontWeight={600}>
+                    {report.model_meta.tokens_used.toLocaleString()}
+                  </Typography>
+                </Box>
+              )}
+              <Box>
+                <Typography variant="caption" color="text.secondary">
+                  Generated
+                </Typography>
+                <Typography variant="body2" fontWeight={600}>
+                  {new Date(report.created_at).toLocaleString()}
+                </Typography>
+              </Box>
+              {report.model_meta.demo_mode && (
+                <Chip label="Demo Mode" size="small" color="warning" />
+              )}
+            </Stack>
+          </Box>
+        </Stack>
+      </Paper>
+    </Fade>
   );
 }

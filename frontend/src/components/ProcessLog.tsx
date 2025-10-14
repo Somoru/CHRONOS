@@ -1,5 +1,15 @@
 'use client';
 
+import {
+  Paper,
+  Typography,
+  Box,
+  Stack,
+  CircularProgress,
+  alpha,
+  Fade,
+} from '@mui/material';
+import { Terminal as TerminalIcon } from '@mui/icons-material';
 import { useEffect, useRef } from 'react';
 
 interface ProcessLogProps {
@@ -8,52 +18,119 @@ interface ProcessLogProps {
 }
 
 export default function ProcessLog({ logs, isLoading }: ProcessLogProps) {
-  const logRef = useRef<HTMLDivElement>(null);
+  const logContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (logRef.current) {
-      logRef.current.scrollTop = logRef.current.scrollHeight;
+    if (logContainerRef.current) {
+      logContainerRef.current.scrollTop = logContainerRef.current.scrollHeight;
     }
   }, [logs]);
 
   return (
-    <div className="glass-panel p-6">
-      <h3 className="text-xl font-bold text-cyan-300 mb-4 flex items-center">
-        <span className="mr-2">🔬</span>
-        Archaeological Process
-      </h3>
-      
-      <div 
-        ref={logRef}
-        className="h-40 overflow-y-auto bg-black bg-opacity-30 rounded-lg p-4 font-mono text-sm space-y-2"
-      >
-        {logs.map((log, index) => (
-          <div 
-            key={index}
-            className="flex items-center animate-fade-in"
-            style={{ animationDelay: `${index * 0.2}s` }}
-          >
-            <span className="text-green-400 mr-2">{'>'}</span>
-            <span className="text-gray-300">{log}</span>
-          </div>
-        ))}
-        
+    <Paper
+      elevation={3}
+      sx={{
+        p: 3,
+        background: (theme) =>
+          theme.palette.mode === 'light'
+            ? 'linear-gradient(145deg, #ffffff 0%, #f5f7fa 100%)'
+            : 'linear-gradient(145deg, #1e1e1e 0%, #2d2d2d 100%)',
+        border: (theme) => `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+      }}
+    >
+      <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 2 }}>
+        <TerminalIcon color="primary" />
+        <Typography variant="h6" fontWeight={600}>
+          Process Log
+        </Typography>
         {isLoading && (
-          <div className="flex items-center">
-            <span className="text-green-400 mr-2">{'>'}</span>
-            <span className="text-gray-300 loading-dots">Processing</span>
-            <div className="ml-2 flex space-x-1">
-              <div className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce"></div>
-              <div className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-              <div className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-            </div>
-          </div>
+          <Fade in>
+            <CircularProgress size={20} thickness={5} />
+          </Fade>
         )}
-      </div>
-      
-      <div className="mt-4 text-xs text-gray-400">
-        {logs.length} operations completed
-      </div>
-    </div>
+      </Stack>
+
+      <Box
+        ref={logContainerRef}
+        sx={{
+          height: 280,
+          overflowY: 'auto',
+          bgcolor: (theme) =>
+            theme.palette.mode === 'light' ? '#f8f9fa' : '#0d1117',
+          borderRadius: 2,
+          p: 2,
+          fontFamily: '"Fira Code", "Consolas", monospace',
+          fontSize: '0.875rem',
+          border: (theme) => `1px solid ${theme.palette.divider}`,
+          '&::-webkit-scrollbar': {
+            width: '8px',
+          },
+          '&::-webkit-scrollbar-track': {
+            background: 'transparent',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            background: (theme) => alpha(theme.palette.primary.main, 0.3),
+            borderRadius: '4px',
+          },
+          '&::-webkit-scrollbar-thumb:hover': {
+            background: (theme) => alpha(theme.palette.primary.main, 0.5),
+          },
+        }}
+      >
+        <Stack spacing={1.5}>
+          {logs.map((log, index) => (
+            <Fade in key={index} timeout={300}>
+              <Box
+                sx={{
+                  color: log.includes('❌')
+                    ? 'error.main'
+                    : log.includes('✅')
+                    ? 'success.main'
+                    : log.includes('🚀') || log.includes('🤖')
+                    ? 'primary.main'
+                    : 'text.primary',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1,
+                  py: 0.5,
+                  px: 1,
+                  borderRadius: 1,
+                  bgcolor: (theme) =>
+                    log.includes('❌')
+                      ? alpha(theme.palette.error.main, 0.1)
+                      : log.includes('✅')
+                      ? alpha(theme.palette.success.main, 0.1)
+                      : 'transparent',
+                }}
+              >
+                <Typography
+                  component="span"
+                  sx={{
+                    fontSize: '0.75rem',
+                    opacity: 0.6,
+                    minWidth: '50px',
+                  }}
+                >
+                  [{new Date().toLocaleTimeString()}]
+                </Typography>
+                <Typography component="span" sx={{ flex: 1 }}>
+                  {log}
+                </Typography>
+              </Box>
+            </Fade>
+          ))}
+          {logs.length === 0 && (
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              textAlign="center"
+              sx={{ py: 4 }}
+            >
+              Waiting for process to start...
+            </Typography>
+          )}
+        </Stack>
+      </Box>
+    </Paper>
   );
 }
