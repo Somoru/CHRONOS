@@ -1,4 +1,4 @@
-# Project Chronos: The AI Archeologist# Project Chronos: The AI Archeologist# Project Chronos — The AI Archeologist
+# Project Chronos: The AI Archeologist# Project Chronos: The AI Archeologist# Project Chronos: The AI Archeologist# Project Chronos — The AI Archeologist
 
 
 
@@ -6,199 +6,199 @@ A full-stack AI-powered application that reconstructs incomplete text fragments 
 
 
 
-## Team InformationA full-stack AI-powered application that reconstructs incomplete text fragments from different internet eras using Google Gemini, era detection with vector embeddings, and contextual web search.[![Cyberpunk](https://img.shields.io/badge/Theme-Cyberpunk-ff00ff)](https://github.com/yourusername/chronos)
+## Team InformationA full-stack AI-powered application that reconstructs incomplete text fragments from different internet eras using Google Gemini, era detection with vector embeddings, and contextual web search.
 
 
 
-- **Rangisetti Lakshmi Pavan** - SE24UARI015[![License: MIT](https://img.shields.io/badge/License-MIT-cyan.svg)](LICENSE)
+- **Rangisetti Lakshmi Pavan** - SE24UARI015
 
 - **Alekhya Nelabhotla** - SE24UARI043
 
-- **Niharika Navath** - SE24UBIT037## Student Information[![Python 3.11+](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://python.org)
+- **Niharika Navath** - SE24UBIT037## Team InformationA full-stack AI-powered application that reconstructs incomplete text fragments from different internet eras using Google Gemini, era detection with vector embeddings, and contextual web search.[![Cyberpunk](https://img.shields.io/badge/Theme-Cyberpunk-ff00ff)](https://github.com/yourusername/chronos)
 
 - **Kamishetty Rishi** - SE24UARI025
 
-- **M. Vinay Venkat Kruthin** - SE24UARI075[![Next.js](https://img.shields.io/badge/Next.js-15-black.svg)](https://nextjs.org)
+- **M. Vinay Venkat Kruthin** - SE24UARI075
 
 
 
-## Project Description**Student Name**: [Your Name]  
+## Project Description- **Rangisetti Lakshmi Pavan** - SE24UARI015[![License: MIT](https://img.shields.io/badge/License-MIT-cyan.svg)](LICENSE)
 
 
 
-Project Chronos is an AI-powered web archeologist that takes fragmented, incomplete text from different internet eras and reconstructs them with full context. It uses Google Gemini 2.5 for intelligent text reconstruction, PostgreSQL with pgvector for era detection through semantic similarity, and Google Custom Search API for finding relevant sources. The application features a modern cyberpunk-themed interface with real-time animations and PDF export capabilities.**Student ID**: [Your ID]> *"In the digital ruins of the past, every fragment tells a story. Chronos awakens the sleeping words."*
+Project Chronos is an AI-powered web archeologist that takes fragmented, incomplete text from different internet eras and reconstructs them with full context. It uses Google Gemini 2.5 for intelligent text reconstruction, PostgreSQL with pgvector for era detection through semantic similarity, and Google Custom Search API for finding relevant sources. The application features a modern cyberpunk-themed interface with real-time animations and PDF export capabilities.- **Alekhya Nelabhotla** - SE24UARI043
 
 
 
-## Setup Instructions
+## Setup Instructions- **Niharika Navath** - SE24UBIT037## Student Information[![Python 3.11+](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://python.org)
 
 
 
-### Prerequisites## Project Description**Project Chronos** is a cyberpunk-themed AI-powered web application that reconstructs fragmented historical internet text using Google Gemini, detects the era of origin, and finds contextual sources through intelligent web search. Built for hackathons with technical depth and visual polish.
+### Prerequisites- **Kamishetty Rishi** - SE24UARI025
 
 - Docker and Docker Compose installed
 
-- Git
+- Git- **M. Vinay Venkat Kruthin** - SE24UARI075[![Next.js](https://img.shields.io/badge/Next.js-15-black.svg)](https://nextjs.org)
 
 
 
-### 1. Clone the RepositoryProject Chronos is an AI-powered web archeologist that takes fragmented, incomplete text from different internet eras and reconstructs them with full context. It uses Google Gemini 2.5 for intelligent text reconstruction, PostgreSQL with pgvector for era detection through semantic similarity, and Google Custom Search API for finding relevant sources. The application features a modern cyberpunk-themed interface with real-time animations and PDF export capabilities.![Chronos Demo](docs/chronos-demo.gif)
+### 1. Clone the Repository
 
 ```bash
 
-git clone https://github.com/Somoru/CHRONOS.git
+git clone https://github.com/Somoru/CHRONOS.git## Project Description**Student Name**: [Your Name]  
 
 cd CHRONOS
 
-```## Setup Instructions## 🌟 Features
+```
 
 
 
-### 2. Install Dependencies
+### 2. Install DependenciesProject Chronos is an AI-powered web archeologist that takes fragmented, incomplete text from different internet eras and reconstructs them with full context. It uses Google Gemini 2.5 for intelligent text reconstruction, PostgreSQL with pgvector for era detection through semantic similarity, and Google Custom Search API for finding relevant sources. The application features a modern cyberpunk-themed interface with real-time animations and PDF export capabilities.**Student ID**: [Your ID]> *"In the digital ruins of the past, every fragment tells a story. Chronos awakens the sleeping words."*
 
 
-
-The project uses Docker Compose, so all dependencies are automatically installed. However, if you want to run services locally:### Prerequisites### 🔬 Core Functionality
-
-
-
-**Backend dependencies** (Python):- Docker and Docker Compose installed- **Fragment Reconstruction**: Transform incomplete internet text into full, coherent messages
-
-```bash
-
-cd backend- Git- **Era Detection**: Identify the time period of digital artifacts using AI and vector embeddings
-
-pip install -r requirements.txt
-
-```- **Contextual Discovery**: Automatically find relevant sources and documentation
-
-
-
-**Frontend dependencies** (Node.js):### 1. Clone the Repository- **Archaeological Analysis**: Detailed explanations of linguistic patterns and cultural context
-
-```bash
-
-cd frontend```bash
-
-npm install
-
-```git clone https://github.com/Somoru/CHRONOS.git### 🎮 Technical Highlights  
-
-
-
-### 3. Set Up API Keyscd CHRONOS- **AI Integration**: Google Gemini with strict JSON output and retry logic
-
-
-
-Create a `.env` file in the project root:```- **Vector Search**: PostgreSQL + pgvector for sophisticated era detection
-
-
-
-```bash- **Real-time UI**: Animated cyberpunk interface with typewriter effects
-
-# Google Gemini API Key
-
-GEMINI_API_KEY=your_gemini_api_key_here### 2. Install Dependencies- **Export System**: Generate PDF reports of archaeological findings
-
-
-
-# Google Custom Search API Key- **Demo Mode**: Full functionality without API keys for seamless presentations
-
-GOOGLE_API_KEY=your_google_search_api_key_here
 
 The project uses Docker Compose, so all dependencies are automatically installed. However, if you want to run services locally:
 
-# Google Custom Search Engine ID
-
-GOOGLE_CX=your_search_engine_id_here### 🎨 Visual Excellence
-
-```
-
-**Backend dependencies** (Python):- **Cyberpunk Aesthetic**: Neon colors, glassmorphism, and matrix-style animations
-
-**How to get API keys:**
-
-```bash- **Responsive Design**: Works beautifully on desktop and mobile
-
-- **Gemini API Key**: Go to [Google AI Studio](https://makersuite.google.com/app/apikey), sign in, and create an API key
-
-- **Google Search API Key**: Visit [Google Cloud Console](https://console.cloud.google.com/apis/credentials), create a project, enable "Custom Search JSON API", and create credentialscd backend- **Interactive Animations**: Flicker effects, confidence meters, and loading sequences
-
-- **Search Engine ID**: Go to [Programmable Search Engine](https://programmablesearchengine.google.com/), create a search engine, and copy the Search Engine ID
-
-pip install -r requirements.txt- **Professional Output**: Clean, shareable reconstruction reports
-
-> **Note**: The application has a demo mode that works without API keys for testing purposes.
-
-```
-
-### 4. Run the Application
-
-## 🚀 Quick Start
-
-**Using Docker (Recommended):**
-
-```bash**Frontend dependencies** (Node.js):
-
-docker-compose up --build
-
-``````bash### Prerequisites
 
 
-
-**Or run services individually:**cd frontend- Docker & Docker Compose
-
-
-
-Backend:npm install- Node.js 18+ (for local frontend development)
+**Backend dependencies** (Python):## Setup Instructions
 
 ```bash
 
-cd backend```- Python 3.11+ (for local backend development)
+cd backend
 
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+pip install -r requirements.txt
+
+```### Prerequisites## Project Description**Project Chronos** is a cyberpunk-themed AI-powered web application that reconstructs fragmented historical internet text using Google Gemini, detects the era of origin, and finds contextual sources through intelligent web search. Built for hackathons with technical depth and visual polish.
+
+
+
+**Frontend dependencies** (Node.js):- Docker and Docker Compose installed
+
+```bash
+
+cd frontend- Git
+
+npm install
 
 ```
 
 
 
-Frontend:### 3. Set Up API Keys### 1. Clone the Repository
-
-```bash
-
-cd frontend```bash
-
-npm run dev
-
-```Create a `.env` file in the project root:git clone https://github.com/yourusername/chronos.git
+### 3. Set Up API Keys### 1. Clone the RepositoryProject Chronos is an AI-powered web archeologist that takes fragmented, incomplete text from different internet eras and reconstructs them with full context. It uses Google Gemini 2.5 for intelligent text reconstruction, PostgreSQL with pgvector for era detection through semantic similarity, and Google Custom Search API for finding relevant sources. The application features a modern cyberpunk-themed interface with real-time animations and PDF export capabilities.![Chronos Demo](docs/chronos-demo.gif)
 
 
 
-Database (requires PostgreSQL with pgvector):cd chronos
+Create a `.env` file in the project root:```bash
 
-```bash
 
-docker-compose up db -d```bash```
 
-```
+```bashgit clone https://github.com/Somoru/CHRONOS.git
 
 # Google Gemini API Key
 
+GEMINI_API_KEY=your_gemini_api_key_herecd CHRONOS
+
+
+
+# Google Custom Search API Key```## Setup Instructions## 🌟 Features
+
+GOOGLE_API_KEY=your_google_search_api_key_here
+
+
+
+# Google Custom Search Engine ID
+
+GOOGLE_CX=your_search_engine_id_here### 2. Install Dependencies
+
+```
+
+
+
+**How to get API keys:**
+
+The project uses Docker Compose, so all dependencies are automatically installed. However, if you want to run services locally:### Prerequisites### 🔬 Core Functionality
+
+- **Gemini API Key**: Go to [Google AI Studio](https://makersuite.google.com/app/apikey), sign in, and create an API key
+
+- **Google Search API Key**: Visit [Google Cloud Console](https://console.cloud.google.com/apis/credentials), create a project, enable "Custom Search JSON API", and create credentials
+
+- **Search Engine ID**: Go to [Programmable Search Engine](https://programmablesearchengine.google.com/), create a search engine, and copy the Search Engine ID
+
+**Backend dependencies** (Python):- Docker and Docker Compose installed- **Fragment Reconstruction**: Transform incomplete internet text into full, coherent messages
+
+> **Note**: The application has a demo mode that works without API keys for testing purposes.
+
+```bash
+
+### 4. Run the Application
+
+cd backend- Git- **Era Detection**: Identify the time period of digital artifacts using AI and vector embeddings
+
+**Using Docker (Recommended):**
+
+```bashpip install -r requirements.txt
+
+docker-compose up --build
+
+``````- **Contextual Discovery**: Automatically find relevant sources and documentation
+
+
+
+**Or run services individually:**
+
+
+
+Backend:**Frontend dependencies** (Node.js):### 1. Clone the Repository- **Archaeological Analysis**: Detailed explanations of linguistic patterns and cultural context
+
+```bash
+
+cd backend```bash
+
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+
+```cd frontend```bash
+
+
+
+Frontend:npm install
+
+```bash
+
+cd frontend```git clone https://github.com/Somoru/CHRONOS.git### 🎮 Technical Highlights  
+
+npm run dev
+
+```
+
+
+
+Database (requires PostgreSQL with pgvector):### 3. Set Up API Keyscd CHRONOS- **AI Integration**: Google Gemini with strict JSON output and retry logic
+
+```bash
+
+docker-compose up db -d
+
+```
+
+Create a `.env` file in the project root:```- **Vector Search**: PostgreSQL + pgvector for sophisticated era detection
+
 Redis (optional, for caching):
 
-```bashGEMINI_API_KEY=your_gemini_api_key_here### 2. Environment Setup
+```bash
 
 docker-compose up redis -d
 
-``````bash
+``````bash- **Real-time UI**: Animated cyberpunk interface with typewriter effects
 
 
 
-### 5. Access the Application# Google Custom Search API Key# Copy environment template
+### 5. Access the Application# Google Gemini API Key
 
 
 
-- **Frontend**: http://localhost:3000GOOGLE_API_KEY=your_google_search_api_key_herecp .env.example .env
+- **Frontend**: http://localhost:3000GEMINI_API_KEY=your_gemini_api_key_here### 2. Install Dependencies- **Export System**: Generate PDF reports of archaeological findings
 
 - **Backend API**: http://localhost:8000
 
@@ -206,43 +206,288 @@ docker-compose up redis -d
 
 
 
-## Usage Guide# Google Custom Search Engine ID# Add your API keys (optional - demo mode works without them)
+## Usage Guide# Google Custom Search API Key- **Demo Mode**: Full functionality without API keys for seamless presentations
 
 
 
-### Running the ApplicationGOOGLE_CX=your_search_engine_id_here# GEMINI_API_KEY=your_gemini_api_key_here
+### Running the ApplicationGOOGLE_API_KEY=your_google_search_api_key_here
 
 
 
-1. **Start the application**:```# GOOGLE_API_KEY=your_google_api_key_here
+1. **Start the application**:The project uses Docker Compose, so all dependencies are automatically installed. However, if you want to run services locally:
 
    ```bash
 
-   docker-compose up# GOOGLE_CX=your_google_search_engine_id_here
+   docker-compose up# Google Custom Search Engine ID
 
    ```
 
-**How to get API keys:**```
+GOOGLE_CX=your_search_engine_id_here### 🎨 Visual Excellence
 
 2. **Open your browser** to http://localhost:3000
 
-
+```
 
 3. **Enter a text fragment** in the input box at the bottom. For example:
 
-   ```- **Gemini API Key**: Go to [Google AI Studio](https://makersuite.google.com/app/apikey), sign in, and create an API key### 3. Launch with Docker
+   ```**Backend dependencies** (Python):- **Cyberpunk Aesthetic**: Neon colors, glassmorphism, and matrix-style animations
 
    such wow. very doge. much amaze. so internet. wow.
 
-   ```- **Google Search API Key**: Visit [Google Cloud Console](https://console.cloud.google.com/apis/credentials), create a project, enable "Custom Search JSON API", and create credentials```bash
+   ```**How to get API keys:**
 
 
 
-4. **Click the send button** or press `Ctrl+Enter` to reconstruct the fragment- **Search Engine ID**: Go to [Programmable Search Engine](https://programmablesearchengine.google.com/), create a search engine, and copy the Search Engine ID# Start all services
+4. **Click the send button** or press `Ctrl+Enter` to reconstruct the fragment```bash- **Responsive Design**: Works beautifully on desktop and mobile
 
 
 
-5. **View the results**:docker-compose up --build
+5. **View the results**:- **Gemini API Key**: Go to [Google AI Studio](https://makersuite.google.com/app/apikey), sign in, and create an API key
+
+   - Reconstructed full text with context
+
+   - Era detection (e.g., "early-2010s" with confidence score)- **Google Search API Key**: Visit [Google Cloud Console](https://console.cloud.google.com/apis/credentials), create a project, enable "Custom Search JSON API", and create credentialscd backend- **Interactive Animations**: Flicker effects, confidence meters, and loading sequences
+
+   - Cultural explanation
+
+   - Web sources for further reading- **Search Engine ID**: Go to [Programmable Search Engine](https://programmablesearchengine.google.com/), create a search engine, and copy the Search Engine ID
+
+   - Missing words analysis
+
+pip install -r requirements.txt- **Professional Output**: Clean, shareable reconstruction reports
+
+6. **Export results**: Click the "Download PDF Report" button to save the reconstruction
+
+> **Note**: The application has a demo mode that works without API keys for testing purposes.
+
+### Example Commands
+
+```
+
+**Test the backend API directly:**
+
+```bash### 4. Run the Application
+
+curl -X POST "http://localhost:8000/api/reconstruct" \
+
+  -H "Content-Type: application/json" \## 🚀 Quick Start
+
+  -d "{\"fragment\": \"brb mom calling on landline\", \"options\": {\"era_detection\": true, \"max_sources\": 5}}"
+
+```**Using Docker (Recommended):**
+
+
+
+**Check application health:**```bash**Frontend dependencies** (Node.js):
+
+```bash
+
+curl http://localhost:8000/healthdocker-compose up --build
+
+```
+
+``````bash### Prerequisites
+
+**Run backend tests:**
+
+```bash
+
+cd backend
+
+pytest**Or run services individually:**cd frontend- Docker & Docker Compose
+
+```
+
+
+
+**Build frontend for production:**
+
+```bashBackend:npm install- Node.js 18+ (for local frontend development)
+
+cd frontend
+
+npm run build```bash
+
+npm start
+
+```cd backend```- Python 3.11+ (for local backend development)
+
+
+
+### Example Fragments to Tryuvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+
+
+
+1. **MySpace Era (mid-2000s)**:```
+
+   ```
+
+   smh at the top 8 drama on myspace
+
+   ```
+
+Frontend:### 3. Set Up API Keys### 1. Clone the Repository
+
+2. **Dial-up Era (late-1990s)**:
+
+   ``````bash
+
+   brb connecting via dialup—phone's busy lol
+
+   ```cd frontend```bash
+
+
+
+3. **Vine Era (early-2010s)**:npm run dev
+
+   ```
+
+   why you always lying mmmm oh my god stop lying. do it for the vine```Create a `.env` file in the project root:git clone https://github.com/yourusername/chronos.git
+
+   ```
+
+
+
+4. **Doge Meme (early-2010s)**:
+
+   ```Database (requires PostgreSQL with pgvector):cd chronos
+
+   such wow. very doge. much amaze. so internet. wow.
+
+   ``````bash
+
+
+
+### Featuresdocker-compose up db -d```bash```
+
+
+
+- **AI Text Reconstruction**: Powered by Google Gemini 2.5 Flash```
+
+- **Era Detection**: Vector similarity search using PostgreSQL + pgvector
+
+- **Web Search Integration**: Automatic source discovery via Google Custom Search# Google Gemini API Key
+
+- **Real-time UI**: Animated interface with typing effects and progress indicators
+
+- **PDF Export**: Generate professional reports of reconstructionsRedis (optional, for caching):
+
+- **Dark/Light Theme**: Toggle between themes
+
+- **Demo Mode**: Works without API keys for testing```bashGEMINI_API_KEY=your_gemini_api_key_here### 2. Environment Setup
+
+
+
+### Troubleshootingdocker-compose up redis -d
+
+
+
+**If the application doesn't start:**``````bash
+
+- Ensure Docker is running: `docker --version`
+
+- Check if ports 3000, 8000, 5432, 6379 are available
+
+- View logs: `docker-compose logs`
+
+### 5. Access the Application# Google Custom Search API Key# Copy environment template
+
+**If reconstruction fails:**
+
+- Verify API keys are correctly set in `.env`
+
+- Check backend logs: `docker-compose logs backend`
+
+- Demo mode activates automatically if keys are missing- **Frontend**: http://localhost:3000GOOGLE_API_KEY=your_google_search_api_key_herecp .env.example .env
+
+
+
+**Database connection issues:**- **Backend API**: http://localhost:8000
+
+- Restart database: `docker-compose restart db`
+
+- Check database logs: `docker-compose logs db`- **API Documentation**: http://localhost:8000/docs
+
+
+
+## Project Structure
+
+
+
+```## Usage Guide# Google Custom Search Engine ID# Add your API keys (optional - demo mode works without them)
+
+chronos/
+
+├── backend/                  # FastAPI backend
+
+│   ├── app/
+
+│   │   ├── main.py          # API endpoints### Running the ApplicationGOOGLE_CX=your_search_engine_id_here# GEMINI_API_KEY=your_gemini_api_key_here
+
+│   │   ├── core/            # Configuration
+
+│   │   ├── models/          # Data models
+
+│   │   └── services/        # Business logic
+
+│   ├── requirements.txt     # Python dependencies1. **Start the application**:```# GOOGLE_API_KEY=your_google_api_key_here
+
+│   └── Dockerfile
+
+├── frontend/                # Next.js frontend   ```bash
+
+│   ├── src/
+
+│   │   ├── app/            # Pages and layouts   docker-compose up# GOOGLE_CX=your_google_search_engine_id_here
+
+│   │   ├── components/     # React components
+
+│   │   └── types/          # TypeScript types   ```
+
+│   ├── package.json        # Node.js dependencies
+
+│   └── Dockerfile**How to get API keys:**```
+
+├── infra/                   # Database initialization
+
+│   └── db-init/2. **Open your browser** to http://localhost:3000
+
+│       └── 01-init.sql     # PostgreSQL schema
+
+├── docker-compose.yml       # Docker orchestration
+
+└── README.md               # This file
+
+```3. **Enter a text fragment** in the input box at the bottom. For example:
+
+
+
+## Technologies Used   ```- **Gemini API Key**: Go to [Google AI Studio](https://makersuite.google.com/app/apikey), sign in, and create an API key### 3. Launch with Docker
+
+
+
+- **Frontend**: Next.js 15, React 19, TypeScript, Tailwind CSS   such wow. very doge. much amaze. so internet. wow.
+
+- **Backend**: FastAPI, Python 3.12, Pydantic
+
+- **Database**: PostgreSQL 15 with pgvector extension   ```- **Google Search API Key**: Visit [Google Cloud Console](https://console.cloud.google.com/apis/credentials), create a project, enable "Custom Search JSON API", and create credentials```bash
+
+- **Cache**: Redis 7
+
+- **AI**: Google Gemini 2.5 Flash
+
+- **Search**: Google Custom Search JSON API
+
+- **Deployment**: Docker & Docker Compose4. **Click the send button** or press `Ctrl+Enter` to reconstruct the fragment- **Search Engine ID**: Go to [Programmable Search Engine](https://programmablesearchengine.google.com/), create a search engine, and copy the Search Engine ID# Start all services
+
+
+
+## License
+
+
+
+MIT License - see LICENSE file for details.5. **View the results**:docker-compose up --build
+
 
    - Reconstructed full text with context
 
