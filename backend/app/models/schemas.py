@@ -21,10 +21,12 @@ class ContextualSource(BaseModel):
 class EraGuess(BaseModel):
     label: str
     confidence: float
+    reasoning: Optional[str] = None
 
 
 class ReconstructionReport(BaseModel):
     id: str
+    fragment: Optional[str] = None
     original_fragment: str
     reconstructed_text: str
     explanation: str
@@ -34,6 +36,7 @@ class ReconstructionReport(BaseModel):
     contextual_sources: List[ContextualSource]
     era_guess: Optional[EraGuess] = None
     created_at: datetime
+    metadata: Dict[str, Any]
     model_meta: Dict[str, Any]
 
 

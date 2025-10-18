@@ -6,35 +6,57 @@ export default {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
-        background: "#0a0610",
-        foreground: "#e0e0e0",
-        neon: {
-          cyan: "#00ffff",
-          magenta: "#ff00ff",
+        border: "var(--border)",
+        input: "var(--input)",
+        ring: "var(--ring)",
+        background: "var(--background)",
+        foreground: "var(--foreground)",
+        primary: {
+          DEFAULT: "var(--primary)",
+          foreground: "var(--primary-foreground)",
         },
-        dark: {
-          bg: "#0a0610",
-          surface: "#1a0f2e",
+        secondary: {
+          DEFAULT: "var(--secondary)",
+          foreground: "var(--secondary-foreground)",
         },
-        glass: {
-          border: "rgba(255, 255, 255, 0.1)",
-          bg: "rgba(26, 15, 46, 0.5)",
+        destructive: {
+          DEFAULT: "var(--destructive)",
+          foreground: "var(--destructive-foreground)",
         },
+        muted: {
+          DEFAULT: "var(--muted)",
+          foreground: "var(--muted-foreground)",
+        },
+        accent: {
+          DEFAULT: "var(--accent)",
+          foreground: "var(--accent-foreground)",
+        },
+        card: {
+          DEFAULT: "var(--card)",
+          foreground: "var(--card-foreground)",
+        },
+      },
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        mono: ["var(--font-geist-mono)", "monospace"],
-        sans: ["var(--font-geist-sans)", "sans-serif"],
-        cyber: ["Orbitron", "sans-serif"],
+        sans: ["var(--font-inter)", "system-ui", "sans-serif"],
+        mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
       animation: {
-        "fade-in": "fadeIn 0.5s ease-in-out",
-        "slide-up": "slideUp 0.5s ease-out forwards",
-        flicker: "flicker 3s infinite alternate",
-        "pulse-border": "pulse-border 2s ease-in-out infinite alternate",
-        "matrix-rain": "matrix-rain 1s linear infinite",
+        "fade-in": "fadeIn 0.6s ease-out",
+        "slide-up": "slideUp 0.5s ease-out",
+        "slide-down": "slideDown 0.5s ease-out",
+        "scale-in": "scaleIn 0.3s ease-out",
+        "spin-slow": "spin 3s linear infinite",
+        shimmer: "shimmer 2s linear infinite",
+        swing: "swing 0.6s ease-in-out infinite",
       },
       keyframes: {
         fadeIn: {
@@ -42,33 +64,25 @@ export default {
           "100%": { opacity: "1" },
         },
         slideUp: {
-          "0%": { transform: "translateY(20px)", opacity: "0" },
+          "0%": { transform: "translateY(10px)", opacity: "0" },
           "100%": { transform: "translateY(0)", opacity: "1" },
         },
-        flicker: {
-          "0%, 18%, 22%, 25%, 53%, 57%, 100%": {
-            opacity: "1",
-            textShadow:
-              "0 0 5px var(--neon-magenta), 0 0 10px var(--neon-magenta), 0 0 15px var(--neon-magenta)",
-          },
-          "20%, 24%, 55%": {
-            opacity: "0.8",
-            textShadow: "none",
-          },
+        slideDown: {
+          "0%": { transform: "translateY(-10px)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
         },
-        "pulse-border": {
-          from: {
-            boxShadow:
-              "0 0 10px var(--neon-cyan), inset 0 0 10px rgba(0, 255, 255, 0.1)",
-          },
-          to: {
-            boxShadow:
-              "0 0 20px var(--neon-cyan), 0 0 30px var(--neon-cyan), inset 0 0 20px rgba(0, 255, 255, 0.2)",
-          },
+        scaleIn: {
+          "0%": { transform: "scale(0.95)", opacity: "0" },
+          "100%": { transform: "scale(1)", opacity: "1" },
         },
-        "matrix-rain": {
-          "0%": { transform: "translateY(-100%)", opacity: "1" },
-          "100%": { transform: "translateY(100%)", opacity: "0.3" },
+        shimmer: {
+          "0%": { backgroundPosition: "-1000px 0" },
+          "100%": { backgroundPosition: "1000px 0" },
+        },
+        swing: {
+          "0%": { transform: "rotate(-15deg) translateY(-2px)" },
+          "50%": { transform: "rotate(15deg) translateY(2px)" },
+          "100%": { transform: "rotate(-15deg) translateY(-2px)" },
         },
       },
     },

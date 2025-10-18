@@ -10,8 +10,8 @@ logger = logging.getLogger(__name__)
 
 
 class DatabaseService:
-    def __init__(self):
-        self.settings = get_settings()
+    def __init__(self, settings):
+        self.settings = settings
         self.pool = None
     
     async def connect(self):

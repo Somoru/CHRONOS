@@ -9,8 +9,8 @@ logger = logging.getLogger(__name__)
 
 
 class SearchClient:
-    def __init__(self):
-        self.settings = get_settings()
+    def __init__(self, settings):
+        self.settings = settings
         self.client = httpx.AsyncClient(timeout=15.0)
         self.cache = {}  # Simple in-memory cache
         

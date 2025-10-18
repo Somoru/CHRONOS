@@ -1,12 +1,12 @@
 import os
 from functools import lru_cache
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
     # Gemini Configuration
     gemini_api_key: str = ""
-    gemini_model: str = "gemini-1.5-pro"
+    gemini_model: str = "gemini-2.5-flash"
     
     # Google Custom Search
     google_api_key: str = ""
@@ -29,12 +29,14 @@ class Settings(BaseSettings):
     max_requests_per_minute: int = 10
     max_monthly_tokens: int = 100000
     
-    class Config:
-        env_file = ".env"
-        case_sensitive = False
-        extra = "ignore"  # Allow extra fields from .env to be ignored
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        case_sensitive=False,
+        extra="ignore"
+    )
         
-    def __post_init__(self):
+    def __init__(self, **values):
+        super().__init__(**values)
         # Auto-enable demo mode if API keys are missing
         if not self.gemini_api_key or not self.google_api_key:
             self.demo_mode = True

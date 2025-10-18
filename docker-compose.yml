@@ -1,22 +1,33 @@
-version: '3.8'
-
 services:
   backend:
     build: 
-      context: .
-      dockerfile: backend/Dockerfile
+      context: ./backend
+      dockerfile: Dockerfile
     ports:
       - "8000:8000"
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/chronos
       - REDIS_URL=redis://redis:6379/0
+      - GEMINI_API_KEY=AIzaSyBvmquoah8c8g1TfEbXlIN6VAAbkxkiCHU
+      - GEMINI_MODEL=gemini-2.5-flash
+      - GOOGLE_API_KEY=7a38ed61a456a3d1dfb0f79d5f88585ebb1860be
+      - GOOGLE_CX=f568d202806fe487e
+      - ENVIRONMENT=development
+      - DEMO_MODE=false
     volumes:
-      - ./backend:/app
-      - ./.env:/app/.env
+      - ./backend/app:/app/app:delegated
+      - backend-cache:/app/__pycache__
     depends_on:
-      - db
-      - redis
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   frontend:
     build:
@@ -25,14 +36,17 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./frontend:/app
-      - /app/node_modules
+      - ./frontend/src:/app/src:delegated
+      - ./frontend/public:/app/public:delegated
+      - frontend-node-modules:/app/node_modules
+      - frontend-next:/app/.next
     environment:
       - NEXT_PUBLIC_API_URL=http://localhost:8000
       - NODE_ENV=development
-    command: npm run dev
+      - WATCHPACK_POLLING=true
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
 
   db:
     image: pgvector/pgvector:pg15
@@ -45,6 +59,12 @@ services:
     volumes:
       - ./infra/db-init:/docker-entrypoint-initdb.d
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d chronos"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
   redis:
     image: redis:7-alpine
@@ -56,3 +76,6 @@ services:
 volumes:
   postgres_data:
   redis_data:
+  backend-cache:
+  frontend-node-modules:
+  frontend-next:

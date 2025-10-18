@@ -7,20 +7,26 @@ export interface ContextualSource {
 export interface EraGuess {
   label: string;
   confidence: number;
+  reasoning?: string;
 }
 
 export interface ReconstructionReport {
-  id: string;
-  original_fragment: string;
+  id?: string;
+  fragment: string;
+  original_fragment?: string;
   reconstructed_text: string;
   explanation: string;
-  missing_words: string[];
+  missing_words?: string[];
   keywords: string[];
   reconstruction_confidence: number;
   contextual_sources: ContextualSource[];
   era_guess?: EraGuess;
-  created_at: string;
-  model_meta: {
+  created_at?: string;
+  metadata: {
+    timestamp: string;
+    processing_time_ms: number;
+  };
+  model_meta?: {
     model: string;
     tokens_used?: number;
     demo_mode?: boolean;

@@ -8,8 +8,9 @@ logger = logging.getLogger(__name__)
 
 
 class EraDetector:
-    def __init__(self):
-        self.settings = get_settings()
+    def __init__(self, settings, db_service):
+        self.settings = settings
+        self.db_service = db_service
         
         # Phase 1: Heuristic keyword-to-era mapping
         self.keyword_patterns = {

@@ -18,14 +18,15 @@ from .models.schemas import (
     ReconstructionReport,
     HealthCheck
 )
-from .core.config import get_settings
+from .dependencies import get_gemini_client, get_search_client, get_era_detector, get_db_service
+from .core.config import Settings, get_settings
+from .middleware.rate_limit import RateLimitMiddleware
+
+from .api.errors import add_exception_handlers
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-# Get settings
-settings = get_settings()
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -33,6 +34,13 @@ app = FastAPI(
     description="AI-powered text fragment reconstruction with era detection",
     version="1.0.0"
 )
+
+# Add custom exception handlers
+add_exception_handlers(app)
+
+# Add rate limiting middleware
+settings = get_settings()
+app.add_middleware(RateLimitMiddleware, requests_per_minute=settings.max_requests_per_minute)
 
 # Configure CORS
 app.add_middleware(
@@ -48,29 +56,44 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Initialize services
-gemini_client = GeminiClient()
-search_client = SearchClient()
-era_detector = EraDetector()
-db_service = DatabaseService()
-
+# Initialize database service for startup/shutdown
+db_service_instance = None
 
 @app.on_event("startup")
 async def startup_event():
     """Initialize database connection on startup"""
-    await db_service.connect()
-    logger.info("Project Chronos backend started successfully")
+    global db_service_instance
+    settings_instance = get_settings()
+    db_service_instance = DatabaseService(settings_instance)
+    
+    # Try to connect to database, but don't fail if unavailable
+    try:
+        await db_service_instance.connect()
+        logger.info("Database connected successfully")
+    except Exception as e:
+        logger.warning(f"Database connection failed: {str(e)}")
+        logger.info("Running without database - reports won't be stored")
+        db_service_instance = None
+    
+    logger.info(f"Project Chronos backend started successfully (Demo mode: {settings_instance.demo_mode})")
 
 
 @app.on_event("shutdown")
 async def shutdown_event():
     """Cleanup on shutdown"""
-    await db_service.disconnect()
+    global db_service_instance
+    if db_service_instance:
+        try:
+            await db_service_instance.disconnect()
+            logger.info("Database disconnected")
+        except Exception as e:
+            logger.warning(f"Error disconnecting database: {str(e)}")
     logger.info("Project Chronos backend shut down")
 
 
+@app.get("/health", response_model=HealthCheck)
 @app.get("/api/health", response_model=HealthCheck)
-async def health_check():
+async def health_check(settings: Settings = Depends(get_settings)):
     """Health check endpoint"""
     return HealthCheck(
         status="healthy",
@@ -80,29 +103,47 @@ async def health_check():
     )
 
 
+from .core.exceptions import InvalidInputError, ReconstructionError
+
 @app.post("/api/reconstruct", response_model=ReconstructionReport)
-async def reconstruct_fragment(request: ReconstructRequest):
+async def reconstruct_fragment(
+    request: ReconstructRequest,
+    gemini_client: GeminiClient = Depends(get_gemini_client),
+    search_client: SearchClient = Depends(get_search_client),
+    era_detector: EraDetector = Depends(get_era_detector),
+    db_service: DatabaseService = Depends(get_db_service),
+    settings: Settings = Depends(get_settings)
+):
     """
     Core orchestration endpoint for text fragment reconstruction
     """
+    logger.info(f"Processing reconstruction request: {request.fragment[:50]}...")
+    
+    # Step 1: Sanitize and validate input
+    fragment = request.fragment.strip()
+    if not fragment:
+        raise InvalidInputError("Fragment cannot be empty")
+    
+    if len(fragment) < 5:
+        raise InvalidInputError("Fragment too short (minimum 5 characters)")
+    
+    if len(fragment) > 2000:
+        raise InvalidInputError("Fragment too long (max 2000 characters)")
+    
+    # Check for suspicious patterns
+    if fragment.count('\n') > 50:
+        raise InvalidInputError("Fragment contains too many line breaks")
+    
     try:
-        logger.info(f"Processing reconstruction request: {request.fragment[:50]}...")
-        
-        # Step 1: Sanitize input
-        fragment = request.fragment.strip()
-        if not fragment:
-            raise HTTPException(status_code=400, detail="Fragment cannot be empty")
-        
-        if len(fragment) > 2000:
-            raise HTTPException(status_code=400, detail="Fragment too long (max 2000 characters)")
-        
         # Step 2: Call Gemini for reconstruction
         logger.info("Calling Gemini for reconstruction...")
         gemini_response = await gemini_client.reconstruct_fragment(fragment)
-        
+        if not gemini_response or "reconstructed_text" not in gemini_response:
+            raise ReconstructionError("Failed to get a valid reconstruction from the AI model.")
+
         # Step 3: Search for contextual sources
         logger.info("Searching for contextual sources...")
-        max_sources = request.options.get("max_sources", 5)
+        max_sources = min(request.options.get("max_sources", 5), 10)  # Cap at 10
         contextual_sources = await search_client.search_sources(
             gemini_response.get("keywords", []),
             max_results=max_sources
@@ -120,17 +161,25 @@ async def reconstruct_fragment(request: ReconstructRequest):
             )
         
         # Step 5: Compose final report
+        start_time = datetime.utcnow()
+        processing_time_ms = int((datetime.utcnow() - start_time).total_seconds() * 1000)
+        
         report = ReconstructionReport(
             id=str(uuid.uuid4()),
+            fragment=fragment,
             original_fragment=fragment,
             reconstructed_text=gemini_response.get("reconstructed_text", ""),
             explanation=gemini_response.get("explanation", ""),
             missing_words=gemini_response.get("missing_words", []),
             keywords=gemini_response.get("keywords", []),
-            reconstruction_confidence=gemini_response.get("confidence", 0.8),
+            reconstruction_confidence=min(max(gemini_response.get("confidence", 0.8), 0.0), 0.95),  # Cap at 95%
             contextual_sources=contextual_sources,
             era_guess=era_result,
             created_at=datetime.utcnow(),
+            metadata={
+                "timestamp": datetime.utcnow().isoformat(),
+                "processing_time_ms": processing_time_ms
+            },
             model_meta={
                 "model": settings.gemini_model,
                 "tokens_used": gemini_response.get("tokens_used", 0),
@@ -138,51 +187,47 @@ async def reconstruct_fragment(request: ReconstructRequest):
             }
         )
         
-        # Step 6: Store in database
+        # Step 6: Store in database (non-blocking)
         logger.info("Storing report in database...")
-        await db_service.store_report(report)
+        if db_service:
+            try:
+                await db_service.store_report(report)
+            except Exception as e:
+                logger.error(f"Failed to store report in database: {str(e)}")
+                # Don't fail the request if database storage fails
+        else:
+            logger.debug("Skipping database storage (database not available)")
         
         logger.info(f"Reconstruction completed successfully: {report.id}")
         return report
         
+    except InvalidInputError:
+        raise  # Re-raise validation errors
+    except ReconstructionError:
+        raise  # Re-raise reconstruction errors
     except Exception as e:
-        logger.error(f"Error during reconstruction: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Reconstruction failed: {str(e)}")
-
-
+        logger.error(f"Unexpected error during reconstruction: {str(e)}", exc_info=True)
+        raise ReconstructionError(f"An unexpected error occurred during reconstruction: {str(e)}")
+        
 @app.get("/api/report/{report_id}", response_model=ReconstructionReport)
-async def get_report(report_id: str):
+async def get_report(report_id: str, db_service: DatabaseService = Depends(get_db_service)):
     """Fetch a single stored report"""
-    try:
-        report = await db_service.get_report(report_id)
-        if not report:
-            raise HTTPException(status_code=404, detail="Report not found")
-        return report
-    except Exception as e:
-        logger.error(f"Error fetching report {report_id}: {str(e)}")
-        raise HTTPException(status_code=500, detail="Failed to fetch report")
-
+    report = await db_service.get_report(report_id)
+    if not report:
+        raise HTTPException(status_code=404, detail="Report not found")
+    return report
 
 @app.get("/api/reports")
-async def list_reports(limit: int = 10, offset: int = 0):
+async def list_reports(limit: int = 10, offset: int = 0, db_service: DatabaseService = Depends(get_db_service)):
     """List recent reports with pagination"""
-    try:
-        reports = await db_service.list_reports(limit=limit, offset=offset)
-        return {"reports": reports, "limit": limit, "offset": offset}
-    except Exception as e:
-        logger.error(f"Error listing reports: {str(e)}")
-        raise HTTPException(status_code=500, detail="Failed to list reports")
-
+    reports = await db_service.list_reports(limit=limit, offset=offset)
+    return {"reports": reports, "limit": limit, "offset": offset}
 
 @app.post("/api/admin/seed-era-samples")
-async def seed_era_samples():
+async def seed_era_samples(era_detector: EraDetector = Depends(get_era_detector)):
     """Admin endpoint to seed era samples with embeddings"""
-    try:
-        await era_detector.seed_era_samples()
-        return {"message": "Era samples seeded successfully"}
-    except Exception as e:
-        logger.error(f"Error seeding era samples: {str(e)}")
-        raise HTTPException(status_code=500, detail="Failed to seed era samples")
+    await era_detector.seed_era_samples()
+    return {"message": "Era samples seeded successfully"}
 
 
 if __name__ == "__main__":

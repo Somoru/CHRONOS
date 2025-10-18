@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
-import ThemeProvider from "./ThemeProvider";
+import { Inter } from "next/font/google";
 import "./globals.css";
+
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
   title: "Project Chronos - AI Text Reconstruction",
   description:
-    "Advanced AI-powered text fragment reconstruction using Gemini and semantic search.",
+    "Advanced AI-powered text fragment reconstruction using Gemini and semantic search. Transform incomplete text into coherent messages with era detection and source discovery.",
 };
 
 export default function RootLayout({
@@ -14,17 +16,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap"
-        />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
-      <body>
-        <ThemeProvider>{children}</ThemeProvider>
-      </body>
+      <body className={inter.variable}>{children}</body>
     </html>
   );
 }
