@@ -14,11 +14,54 @@ A full-stack AI-powered application that reconstructs incomplete text fragments 
 
 Project Chronos is an AI-powered web archeologist that takes fragmented, incomplete text from different internet eras and reconstructs them with full context. It uses Google Gemini 2.5 for intelligent text reconstruction, PostgreSQL with pgvector for era detection through semantic similarity, and Google Custom Search API for finding relevant sources. The application features a modern cyberpunk-themed interface with real-time animations and PDF export capabilities.
 
+
+
+## Features
+
+###  Core AI Features
+- **Intelligent Text Reconstruction**: Uses Google Gemini 2.5 Flash to reconstruct incomplete/fragmented text with full cultural context
+- **Era Detection System**: Machine learning-based era identification (late-1990s, early-2000s, mid-2000s, early-2010s, mid-2010s, late-2010s) using PostgreSQL + pgvector
+- **Contextual Web Search**: Automatic discovery of 5 relevant web sources using Google Custom Search API
+- **Missing Words Analysis**: Identifies and highlights words that were abbreviated or omitted
+- **Keyword Extraction**: Automatically extracts relevant keywords from fragments
+- **Confidence Scoring**: Reconstruction confidence and era detection confidence percentages
+
+###  User Interface Features
+- **Interactive Example Buttons**: 4 pre-loaded example fragments for quick testing
+- **Responsive Design**: Works on desktop, tablet, and mobile
+- **Era Detection Badge**: Real-time ON/OFF status indicator
+
+###  Output & Export Features
+- **Professional PDF Reports**: Download detailed reports with all reconstruction data
+- **Formatted Display**: Clean cards showing reconstructed text, era guess, explanations, and sources
+- **Always-Visible Examples**: Try another fragment immediately after viewing results
+
+###  Technical Features
+- **Demo Mode**: Fully functional with pre-configured responses (no API keys needed)
+- **Redis Caching**: Fast response times with intelligent caching
+- **Async Architecture**: Non-blocking FastAPI backend
+- **Docker Deployment**: One-command setup with docker-compose
+- **Health Monitoring**: System status endpoint
+- **Interactive API Docs**: Auto-generated Swagger UI at /docs
+- **Error Recovery**: Graceful fallbacks if APIs fail
+- **CORS Enabled**: Secure cross-origin requests
+- **Keyboard Shortcuts**: Ctrl+Enter to submit
+
+###  Advanced Features
+- **Vector Embeddings**: 40 pre-seeded era samples in PostgreSQL with pgvector
+- **Enhanced Prompting**: Custom Gemini prompts for storytelling-style reconstructions
+- **Deduplication**: Smart filtering to avoid duplicate source domains
+- **Rate Limiting**: Built-in protection against API abuse
+- **Session Management**: Auto-clear input after successful reconstruction
+
+
 ## Setup Instructions
 
 ### Prerequisites
 - Docker and Docker Compose
 - Git
+- Node
+- Python
 
 ### 1. Clone the Repository
 
